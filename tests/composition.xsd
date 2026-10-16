@@ -1,0 +1,33 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:c="urn:mxsd:composition" xmlns:f="urn:mxsd:foreign"
+           targetNamespace="urn:mxsd:composition" elementFormDefault="qualified">
+  <xs:include schemaLocation="composition_include.xsd"/>
+  <xs:import namespace="urn:mxsd:foreign" schemaLocation="composition_foreign.xsd"/>
+  <xs:redefine schemaLocation="composition_base.xsd">
+    <xs:group name="RecordFields">
+      <xs:sequence>
+        <xs:group ref="c:RecordFields"/>
+        <xs:element name="groupExtra" type="xs:int"/>
+      </xs:sequence>
+    </xs:group>
+    <xs:attributeGroup name="RecordAttributes">
+      <xs:attributeGroup ref="c:RecordAttributes"/>
+      <xs:attribute name="extraCode" type="xs:token" use="required"/>
+    </xs:attributeGroup>
+    <xs:complexType name="Record">
+      <xs:complexContent><xs:extension base="c:Record">
+        <xs:sequence><xs:element name="extraValue" type="xs:int"/></xs:sequence>
+      </xs:extension></xs:complexContent>
+    </xs:complexType>
+  </xs:redefine>
+  <xs:element name="composed">
+    <xs:complexType><xs:sequence>
+      <xs:element name="included" type="c:IncludedType"/>
+      <xs:element ref="f:foreignItem"/>
+      <xs:element name="record" type="c:Record"/>
+      <xs:group ref="c:RecordFields"/>
+    </xs:sequence>
+      <xs:attributeGroup ref="c:RecordAttributes"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
